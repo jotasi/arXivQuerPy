@@ -273,3 +273,9 @@ class QueryString:
         NotInQueryException
             If the specified category was not searched in before
         """
+        if not (category in self.validCategories):
+            raise InvalidCategoryException
+        try:
+            self.categories.remove(category)
+        except ValueError:
+            raise NotInQueryException

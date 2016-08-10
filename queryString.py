@@ -23,6 +23,8 @@ class QueryString:
     blockEnd = r"%29"
     andString = r"+AND+"
     orString = r"+OR+"
+    validCategories = ["cond-mat",
+                       "cond-mat.soft"]
 
     def __init__(self):
         self.categories = []
@@ -177,6 +179,10 @@ class QueryString:
         InvalidCategoryException
             If the category is not a known category
         """
+        if not (category in self.validCategories):
+            raise InvalidCategoryException
+        if not (category in self.categories):
+            self.categories.append(category)
 
     def removeAuthorQuery(self, authorName):
         """Remove an author from the query string

@@ -31,5 +31,27 @@ class test_emptyQueryString(test_queryString):
     def test_getAllCategoriesEmpty(self):
         self.assertEqual(self.queryString.getAllCategories(), [])
 
+
+class test_addingCategories(test_queryString):
+    def test_addingValidCategories(self):
+        self.queryString.addCategory("cond-mat")
+        self.queryString.addCategory("cond-mat.soft")
+        self.assertEqual(self.queryString.getAllCategories(),
+                         ["cond-mat", "cond-mat.soft"])
+
+    def test_addingValidCategoryTwice(self):
+        self.queryString.addCategory("cond-mat")
+        self.queryString.addCategory("cond-mat")
+        self.assertEqual(self.queryString.getAllCategories(), ["cond-mat"])
+
+    def test_addingEmptyCategory(self):
+        with self.assertRaises(InvalidCategoryException):
+            self.queryString.addCategory("")
+
+    def test_addingUnknownCategory(self):
+        with self.assertRaises(InvalidCategoryException):
+            self.queryString.addCategory("definetlyInvalid")
+
+
 if __name__ == "__main__":
     unittest.main()

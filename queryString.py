@@ -137,6 +137,8 @@ class QueryString:
         authorName: str
             Name of an author to also search for
         """
+        if not (authorName in self.queries["au"]):
+            self.queries["au"].append(authorName)
 
     def addTitleQuery(self, titleQuery):
         """Add an string to be contained in a title to the query string
@@ -150,6 +152,8 @@ class QueryString:
         titleQuery: str
             Word to also search for in titles
         """
+        if not (titleQuery in self.queries["ti"]):
+            self.queries["ti"].append(titleQuery)
 
     def addAbstractQuery(self, abstractQuery):
         """Add an string to be contained in an abstract to the query string
@@ -163,6 +167,8 @@ class QueryString:
         abstractQuery: str
             Word to also search for in abstracts
         """
+        if not (abstractQuery in self.queries["abs"]):
+            self.queries["abs"].append(abstractQuery)
 
     def addCategory(self, category):
         """Add a category to be searched in
@@ -200,6 +206,10 @@ class QueryString:
         NotInQueryException
             If the specified author was not in the query before
         """
+        try:
+            self.queries["au"].remove(authorName)
+        except ValueError:
+            raise NotInQueryException
 
     def removeAllAuthorQueries(self):
         """Remove all authors from the query string
@@ -207,6 +217,7 @@ class QueryString:
         Stop searching for authors. At least one query has to be
         specified overall to have a valid query string.
         """
+        self.queries["au"] = []
 
     def removeTitleQuery(self, titleQuery):
         """Remove an title query from the query string
@@ -224,6 +235,10 @@ class QueryString:
         NotInQueryException
             If the specified word was not in the title queries before
         """
+        try:
+            self.queries["ti"].remove(titleQuery)
+        except ValueError:
+            raise NotInQueryException
 
     def removeAllTitleQueries(self):
         """Remove all titles from the query string
@@ -231,6 +246,7 @@ class QueryString:
         Stop searching for titles. At least one query has to be
         specified overall to have a valid query string.
         """
+        self.queries["ti"] = []
 
     def removeAbstractQuery(self, abstractQuery):
         """Remove an abstract query from the query string
@@ -248,6 +264,10 @@ class QueryString:
         NotInQueryException
             If the specified word was not in the title queries before
         """
+        try:
+            self.queries["abs"].remove(abstractQuery)
+        except ValueError:
+            raise NotInQueryException
 
     def removeAllAbstractQueries(self):
         """Remove all abstracts from the query string
@@ -255,6 +275,7 @@ class QueryString:
         Stop searching for abstracts. At least one query has to be
         specified overall to have a valid query string.
         """
+        self.queries["abs"] = []
 
     def removeCategory(self, category):
         """Remove a search category

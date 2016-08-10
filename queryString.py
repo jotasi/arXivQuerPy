@@ -25,7 +25,25 @@ class QueryString:
     orString = r"+OR+"
 
     def __init__(self):
-        pass
+        self.categories = []
+        self.queries = {"ti":  [],
+                        "abs": [],
+                        "au":  []}
+
+    def __checkForEmptyQuery(self):
+        """Check if there are any queries
+
+        Returns
+        -------
+        empty: bool
+            Indicates if this is a valid query.
+        """
+        empty = True
+        for key in self.queries:
+            if len(self.queries[key]) > 0:
+                empty = False
+                break
+        return empty
 
     def __str__(self):
         """Gives the current QueryString as string
@@ -43,6 +61,8 @@ class QueryString:
         EmptyQueryException
             If there are no querys to search for.
         """
+        if self.__checkForEmptyQuery():
+            raise EmptyQueryException
         return ""
 
     def getSearchString(self):
@@ -61,6 +81,7 @@ class QueryString:
         EmptyQueryException
             If there are no querys to search for.
         """
+        return str(self)
 
     def getAllAuthorQueries(self):
         """Give a list of all authors that are searched for
@@ -70,6 +91,7 @@ class QueryString:
         authorList: list
             List of all authors that are searched for
         """
+        return self.queries["au"]
 
     def getAllTitleQueries(self):
         """Give a list of all title queries that are searched for
@@ -79,6 +101,7 @@ class QueryString:
         titleList: list
             List of all title queries that are searched for
         """
+        return self.queries["ti"]
 
     def getAllAbstractQueries(self):
         """Give a list of all abstract queries that are searched for
@@ -88,6 +111,7 @@ class QueryString:
         abstractList: list
             List of all abstract queries that are searched for
         """
+        return self.queries["abs"]
 
     def getAllCategories(self):
         """Give a list of all categories that are searched in
@@ -97,6 +121,7 @@ class QueryString:
         categoryList: list
             List of all categories that are searched in
         """
+        return self.categories
 
     def addAuthorQuery(self, authorName):
         """Add an author to be contained in the query string

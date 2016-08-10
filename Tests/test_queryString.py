@@ -177,5 +177,89 @@ class test_addingRemovingSearchQueries(test_queryString):
                          [])
 
 
+class test_queryStringProduction(test_queryString):
+    def test_onlyAuthorNoCategory(self):
+        self.queryString.addAuthorQuery("Testfrau_T")
+        self.assertEqual(str(self.queryString),
+                         r"http://export.arxiv.org/api/query?"
+                         r"search_query=%28au:Testfrau_T%29"
+                         r"&sortBy=lastUpdatedDate&start=0&max_results=10")
+
+    def test_onlyAbstractNoCategory(self):
+        self.queryString.addAbstractQuery("Awesome")
+        self.assertEqual(str(self.queryString),
+                         r"http://export.arxiv.org/api/query?"
+                         r"search_query=%28abs:Awesome%29"
+                         r"&sortBy=lastUpdatedDate&start=0&max_results=10")
+
+    def test_onlyTitleNoCategory(self):
+        self.queryString.addTitleQuery("Awesome")
+        self.assertEqual(str(self.queryString),
+                         r"http://export.arxiv.org/api/query?"
+                         r"search_query=%28ti:Awesome%29"
+                         r"&sortBy=lastUpdatedDate&start=0&max_results=10")
+
+    def test_onlyTitleWithCategory(self):
+        self.queryString.addTitleQuery("Awesome")
+        self.queryString.addCategory("cond-mat")
+        self.assertEqual(str(self.queryString),
+                         r"http://export.arxiv.org/api/query?"
+                         r"search_query=%28ti:Awesome%29"
+                         r"+AND+%28cat:cond-mat%29"
+                         r"&sortBy=lastUpdatedDate&start=0&max_results=10")
+
+    def test_onlyTitleWithTwoCategories(self):
+        self.queryString.addTitleQuery("Awesome")
+        self.queryString.addCategory("cond-mat")
+        self.queryString.addCategory("cond-mat.soft")
+        self.assertEqual(str(self.queryString),
+                         r"http://export.arxiv.org/api/query?"
+                         r"search_query=%28ti:Awesome%29"
+                         r"+AND+%28cat:cond-mat+OR+cat:cond-mat.soft%29"
+                         r"&sortBy=lastUpdatedDate&start=0&max_results=10")
+
+    def test_onlyAuthorsNoCategory(self):
+        self.queryString.addAuthorQuery("Testfrau_T")
+        self.queryString.addAuthorQuery("Mustermann_M")
+        self.assertEqual(str(self.queryString),
+                         r"http://export.arxiv.org/api/query?"
+                         r"search_query=%28au:Testfrau_T+OR+au:Mustermann_M%29"
+                         r"&sortBy=lastUpdatedDate&start=0&max_results=10")
+
+    def test_onlyAbstractsNoCategory(self):
+        self.queryString.addAbstractQuery("Awesome")
+        self.queryString.addAbstractQuery("Stuff")
+        self.assertEqual(str(self.queryString),
+                         r"http://export.arxiv.org/api/query?"
+                         r"search_query=%28abs:Awesome+OR+abs:Stuff%29"
+                         r"&sortBy=lastUpdatedDate&start=0&max_results=10")
+
+    def test_onlyTitlesNoCategory(self):
+        self.queryString.addTitleQuery("Awesome")
+        self.queryString.addTitleQuery("Stuff")
+        self.assertEqual(str(self.queryString),
+                         r"http://export.arxiv.org/api/query?"
+                         r"search_query=%28ti:Awesome+OR+ti:Stuff%29"
+                         r"&sortBy=lastUpdatedDate&start=0&max_results=10")
+
+    def test_AuthorsTitlesAbstractsWithCategory(self):
+        self.queryString.addAuthorQuery("Testfrau_T")
+        self.queryString.addAuthorQuery("Mustermann_M")
+        self.queryString.addTitleQuery("Awesome")
+        self.queryString.addTitleQuery("Stuff")
+        self.queryString.addAbstractQuery("Great")
+        self.queryString.addAbstractQuery("Science")
+        self.queryString.addCategory("cond-mat")
+        self.queryString.addCategory("cond-mat.soft")
+        self.assertEqual(str(self.queryString),
+                         r"http://export.arxiv.org/api/query?"
+                         r"search_query=%28au:Testfrau_T+OR+"
+                         r"au:Mustermann_M+OR+"
+                         r"ti:Awesome+OR+ti:Stuff+OR+"
+                         r"abs:Great+OR+abs:Science%29"
+                         r"+AND+%28cat:cond-mat+OR+cat:cond-mat.soft%29"
+                         r"&sortBy=lastUpdatedDate&start=0&max_results=10")
+
+
 if __name__ == "__main__":
     unittest.main()

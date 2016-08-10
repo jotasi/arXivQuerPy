@@ -65,7 +65,27 @@ class QueryString:
         """
         if self.__checkForEmptyQuery():
             raise EmptyQueryException
-        return ""
+        url = self.baseUrl+self.searchPrefix+self.blockStart
+        first = True  # First query does not need an +OR+
+        for queryType in ["au", "ti", "abs"]:
+            if len(self.queries[queryType]) > 0:
+                for query in self.queries[queryType]:
+                    if first:
+                        url += queryType+":"+query
+                        first = False
+                    else:
+                        url += "+OR+"+queryType+":"+query
+        if len(self.categories) > 0:
+            url += self.blockEnd+"+AND+"+self.blockStart
+            first = True  # First query does not need an +OR+
+            for category in self.categories:
+                if first:
+                    url += "cat:"+category
+                    first = False
+                else:
+                    url += "+OR+cat:"+category
+        url += self.blockEnd+r"&sortBy=lastUpdatedDate&start=0&max_results=10"
+        return url
 
     def getSearchString(self):
         """Gives the current QueryString as string

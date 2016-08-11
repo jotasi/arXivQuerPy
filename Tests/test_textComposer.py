@@ -1,7 +1,18 @@
 import unittest
 import feedparser
+import datetime
 from feedDownloader import *
 from textComposer import *
+
+
+class test_textComposerDateConstructor(unittest.TestCase):
+    def test_invalidDate(self):
+        with self.assertRaises(NotADateException):
+            TextComposer(date=10)
+
+    def test_validDate(self):
+        date = datetime.date(2016, 1, 1)
+        self.assertEqual(TextComposer(date=date).getDate(), date)
 
 
 class test_textComposer(unittest.TestCase):
@@ -18,6 +29,27 @@ class test_textComposer(unittest.TestCase):
                                        "authors": "fdsa",
                                        "link": "asdff",
                                        "summary": "ffdsa"})
+
+    def test_updateDate(self):
+        date = datetime.date(2016, 1, 1)
+        self.textComposer.updateDate(date)
+        self.assertEqual(self.textComposer.getDate(), date)
+
+    def test_dateReached(self):
+        date = datetime.date(2016, 8, 11)
+        self.textComposer.updateDate(date)
+        feedDL = FeedDownloader(r"notNecessary")
+        feedDL.loadFeed("./Tests/testFeed.pickle")
+        feed = feedDL.getFeed()
+        self.assertTrue(self.textComposer.addFeed(feed))
+
+    def test_dateNotReached(self):
+        date = datetime.date(2016, 8, 9)
+        self.textComposer.updateDate(date)
+        feedDL = FeedDownloader(r"notNecessary")
+        feedDL.loadFeed("./Tests/testFeed.pickle")
+        feed = feedDL.getFeed()
+        self.assertFalse(self.textComposer.addFeed(feed))
 
     def test_noFeed(self):
         self.assertEqual(str(self.textComposer), "")

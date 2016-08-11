@@ -32,6 +32,13 @@ class test_queryStringManipulationAndEmptyFeed(test_feedDownloader):
         with self.assertRaises(NoDownloadedFeedException):
             self.feedDownloader.saveFeed()
 
+    def test_loadOldBackUp(self):
+        fileName = "./Tests/testFeed.pickle"
+        self.feedDownloader.loadFeed(fileName)
+        feed = self.feedDownloader.getFeed()
+        self.assertEqual(type(feed), feedparser.FeedParserDict)
+        self.assertEqual(len(feed.entries), 10)
+
 
 class test_feedDownload(unittest.TestCase):
     @classmethod
@@ -53,6 +60,23 @@ class test_feedDownload(unittest.TestCase):
         newFeedDownloader.loadFeed()
         self.assertEqual(self.feedDownloader.getFeed(),
                          newFeedDownloader.getFeed())
+
+    def test_saveBackUpChangedName(self):
+        fileName = "./nameTest.pickle"
+        self.feedDownloader.saveFeed(fileName)
+        self.assertTrue(os.path.exists(fileName))
+        if os.path.exists(fileName):
+            os.remove(fileName)
+
+    def test_saveLoadBackUpChangedName(self):
+        fileName = "./nameTest.pickle"
+        self.feedDownloader.saveFeed(fileName)
+        newFeedDownloader = FeedDownloader("garbageString")
+        newFeedDownloader.loadFeed(fileName)
+        self.assertEqual(self.feedDownloader.getFeed(),
+                         newFeedDownloader.getFeed())
+        if os.path.exists(fileName):
+            os.remove(fileName)
 
     def test_getFeed(self):
         feed = self.feedDownloader.getFeed()

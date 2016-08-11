@@ -24,10 +24,10 @@ class TextComposer():
         startingText: str
             greeting text to start the email
         """
-        self.text = ""
+        self.text = startingText
 
     def __str__(self):
-        return self.text
+        return self.text.encode("utf-8")
 
     def getText(self):
         """Gives the current version of the text
@@ -37,6 +37,7 @@ class TextComposer():
         text: str
             Current text version
         """
+        return str(self)
 
     def addFeed(self, feed):
         """Adds another feed to the text
@@ -51,3 +52,21 @@ class TextComposer():
         NotAFeedException
             If the given feed has an invalid feed format
         """
+        if not (type(feed) == feedparser.FeedParserDict):
+            raise NotAFeedException
+        if not (self.text == ""):
+            self.text += u"\n"
+        numEntries = len(feed.entries)
+        for i, entry in enumerate(feed.entries):
+            if i > 0:
+                self.text += u"\n"
+            self.text += entry.title+u"\n"
+            numAuthors = len(entry.authors)
+            for j, author in enumerate(entry.authors):
+                self.text += author["name"]
+                if j < numAuthors-1:
+                    self.text += u", "
+                else:
+                    self.text += u"\n"
+            self.text += entry.link+u"\n"
+            self.text += entry.summary+u"\n"

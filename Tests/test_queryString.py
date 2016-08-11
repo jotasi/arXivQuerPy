@@ -261,5 +261,49 @@ class test_queryStringProduction(test_queryString):
                          r"&sortBy=lastUpdatedDate&start=0&max_results=10")
 
 
+class test_queryStringResultNumbers(unittest.TestCase):
+    def test_onlyAuthorChangeN(self):
+        self.queryString = QueryString(N=100)
+        self.queryString.addAuthorQuery("Testfrau_T")
+        self.assertEqual(str(self.queryString),
+                         r"http://export.arxiv.org/api/query?"
+                         r"search_query=%28au:Testfrau_T%29"
+                         r"&sortBy=lastUpdatedDate&start=0&max_results=100")
+
+    def test_onlyAuthorChangeStart(self):
+        self.queryString = QueryString(start=100)
+        self.queryString.addAuthorQuery("Testfrau_T")
+        self.assertEqual(str(self.queryString),
+                         r"http://export.arxiv.org/api/query?"
+                         r"search_query=%28au:Testfrau_T%29"
+                         r"&sortBy=lastUpdatedDate&start=100&max_results=10")
+
+    def test_onlyAuthorChangeStartAndN(self):
+        self.queryString = QueryString(N=5, start=100)
+        self.queryString.addAuthorQuery("Testfrau_T")
+        self.assertEqual(str(self.queryString),
+                         r"http://export.arxiv.org/api/query?"
+                         r"search_query=%28au:Testfrau_T%29"
+                         r"&sortBy=lastUpdatedDate&start=100&max_results=5")
+
+    def test_onlyAuthorUpdateN(self):
+        self.queryString = QueryString()
+        self.queryString.addAuthorQuery("Testfrau_T")
+        self.queryString.nextNumberOfResults(15)
+        self.assertEqual(str(self.queryString),
+                         r"http://export.arxiv.org/api/query?"
+                         r"search_query=%28au:Testfrau_T%29"
+                         r"&sortBy=lastUpdatedDate&start=10&max_results=15")
+
+    def test_onlyAuthorChangeUpdateN(self):
+        self.queryString = QueryString(N=8, start=12)
+        self.queryString.addAuthorQuery("Testfrau_T")
+        self.queryString.nextNumberOfResults(15)
+        self.assertEqual(str(self.queryString),
+                         r"http://export.arxiv.org/api/query?"
+                         r"search_query=%28au:Testfrau_T%29"
+                         r"&sortBy=lastUpdatedDate&start=20&max_results=15")
+
+
 if __name__ == "__main__":
     unittest.main()

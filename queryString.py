@@ -26,7 +26,7 @@ class QueryString:
     validCategories = ["cond-mat",
                        "cond-mat.soft"]
 
-    def __init__(self):
+    def __init__(self, N=10, start=0):
         self.categories = []
         self.queries = {"ti":  [],
                         "abs": [],
@@ -144,6 +144,15 @@ class QueryString:
             List of all categories that are searched in
         """
         return self.categories
+
+    def nextNumberOfResults(self, N):
+        """Changes the query string to search for the next N results
+
+        Parameters
+        ----------
+        N: int
+            Number of next results to search for
+        """
 
     def addAuthorQuery(self, authorName):
         """Add an author to be contained in the query string

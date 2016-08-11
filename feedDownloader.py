@@ -65,14 +65,14 @@ class FeedDownloader():
             raise NoDownloadedFeedException
         return self.feed
 
-    def saveFeed(self):
+    def saveFeed(self, fileName=r"./feed.pickle"):
         """Saves the feed for further use
         """
         if self.feed is None:
             raise NoDownloadedFeedException
-        pickle.dump(self.feed, open("./feed.pickle", "wb"))
+        pickle.dump(self.feed, open(fileName, "wb"))
 
-    def loadFeed(self):
+    def loadFeed(self, fileName=r"./feed.pickle"):
         """Loads the feed for further use
 
         Raises
@@ -80,6 +80,6 @@ class FeedDownloader():
         NoSavedFeedException
             If no saved feed is found
         """
-        if not os.path.exists("./feed.pickle"):
+        if not os.path.exists(fileName):
             raise NoSavedFeedException
-        self.feed = pickle.load(open("./feed.pickle", "rb"))
+        self.feed = pickle.load(open(fileName, "rb"))

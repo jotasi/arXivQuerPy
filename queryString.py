@@ -27,6 +27,17 @@ class QueryString:
                        "cond-mat.soft"]
 
     def __init__(self, N=10, start=0):
+        """Constructor for a query string
+
+        Parameters
+        ----------
+        N: int
+            Number of results to search for
+        start: int
+            Result number to start from
+        """
+        self.start = start
+        self.N = N
         self.categories = []
         self.queries = {"ti":  [],
                         "abs": [],
@@ -84,7 +95,9 @@ class QueryString:
                     first = False
                 else:
                     url += "+OR+cat:"+category
-        url += self.blockEnd+r"&sortBy=lastUpdatedDate&start=0&max_results=10"
+        url += (self.blockEnd
+                + r"&sortBy=lastUpdatedDate&start={0:d}&max_results={1:d}"
+                .format(self.start, self.N))
         return url
 
     def getSearchString(self):
@@ -145,7 +158,7 @@ class QueryString:
         """
         return self.categories
 
-    def nextNumberOfResults(self, N):
+    def nextNumberOfResults(self, N=10):
         """Changes the query string to search for the next N results
 
         Parameters
@@ -153,6 +166,8 @@ class QueryString:
         N: int
             Number of next results to search for
         """
+        self.start += self.N
+        self.N = N
 
     def addAuthorQuery(self, authorName):
         """Add an author to be contained in the query string

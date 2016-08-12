@@ -24,7 +24,7 @@ class arXivQuerPy():
             From when to get the updateDate
         """
         if (greeting is None):
-            greeting = "arXiv update scince {0}:\n".format(str(date))
+            greeting = "arXiv update since {0}:\n".format(str(date))
         self.query = qS.QueryString()
         self.feedDL = None
         self.textComp = tC.TextComposer(greeting, date)

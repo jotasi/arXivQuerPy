@@ -95,7 +95,7 @@ class arXivQuerPy():
         """Sends the gathered feed as text to the given address
         """
         text = self.textComp.getText()
-        if ((not suppress) or (text.count('\n') > 1)):
+        if ((not suppress) or (text.count('\n') > 2)):
             mS.sendMail(text, address)
 
 if (__name__ == "__main__"):

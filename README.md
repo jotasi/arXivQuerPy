@@ -1,6 +1,8 @@
 # arXivQuerPy
 (Very creative/funny, I know...)
 
+E-Mail for comments and/or suggestions to siebertjonathan(at)aim.com
+
 arXivQuerPy is a `python` code to automatically search arXiv for new uploads or
 updates during the last days matching to queries that you defined.
 

@@ -24,7 +24,7 @@ class arXivQuerPy():
             From when to get the updateDate
         """
         if (greeting is None):
-            greeting = "arXiv update scince {0}".format(str(date))
+            greeting = "arXiv update scince {0}:\n".format(str(date))
         self.query = qS.QueryString()
         self.feedDL = None
         self.textComp = tC.TextComposer(greeting, date)
@@ -91,10 +91,12 @@ class arXivQuerPy():
             self.feedDL.updateQueryString(self.query.getSearchString())
             self.feedDL.updateFeed()
 
-    def sendMail(self, address):
+    def sendMail(self, address, suppress):
         """Sends the gathered feed as text to the given address
         """
-        mS.sendMail(self.textComp.getText(), address)
+        text = self.textComp.getText()
+        if ((not suppress) or (text.count('\n') > 1)):
+            mS.sendMail(text, address)
 
 if (__name__ == "__main__"):
     parser = argparse.ArgumentParser()
@@ -112,9 +114,17 @@ if (__name__ == "__main__"):
     parser.add_argument("-b", "--abstract", type=str, default=None,
                         help="File containing the keywords to search for in "
                              "abstracts")
+    parser.add_argument("-s", "--suppress", action="store_true",
+                        help="Don't send me empty EMails!")
+    parser.add_argument("-l", "--lastNDays", type=int, default=None,
+                        help="Go back this many days")
     args = parser.parse_args()
 
-    querPy = arXivQuerPy()
+    if args.lastNDays is None:
+        querPy = arXivQuerPy()
+    else:
+        querPy = arXivQuerPy(date=datetime.date.today()
+                             - datetime.timedelta(days=args.lastNDays))
 
     if not (args.categories is None):
         with open(args.categories) as f:
@@ -136,4 +146,4 @@ if (__name__ == "__main__"):
     except qS.EmptyQueryException:
         exit(1)
 
-    querPy.sendMail(args.email)
+    querPy.sendMail(args.email, args.suppress)

@@ -182,21 +182,21 @@ class test_queryStringProduction(test_queryString):
         self.queryString.addAuthorQuery("Testfrau_T")
         self.assertEqual(str(self.queryString),
                          r"http://export.arxiv.org/api/query?"
-                         r"search_query=%28au:Testfrau_T%29"
+                         r"search_query=%28%28au:Testfrau_T%29%29"
                          r"&sortBy=lastUpdatedDate&start=0&max_results=10")
 
     def test_onlyAbstractNoCategory(self):
         self.queryString.addAbstractQuery("Awesome")
         self.assertEqual(str(self.queryString),
                          r"http://export.arxiv.org/api/query?"
-                         r"search_query=%28abs:Awesome%29"
+                         r"search_query=%28%28abs:Awesome%29%29"
                          r"&sortBy=lastUpdatedDate&start=0&max_results=10")
 
     def test_onlyTitleNoCategory(self):
         self.queryString.addTitleQuery("Awesome")
         self.assertEqual(str(self.queryString),
                          r"http://export.arxiv.org/api/query?"
-                         r"search_query=%28ti:Awesome%29"
+                         r"search_query=%28%28ti:Awesome%29%29"
                          r"&sortBy=lastUpdatedDate&start=0&max_results=10")
 
     def test_onlyTitleWithCategory(self):
@@ -204,7 +204,7 @@ class test_queryStringProduction(test_queryString):
         self.queryString.addCategory("cond-mat")
         self.assertEqual(str(self.queryString),
                          r"http://export.arxiv.org/api/query?"
-                         r"search_query=%28ti:Awesome%29"
+                         r"search_query=%28%28ti:Awesome%29%29"
                          r"+AND+%28cat:cond-mat%29"
                          r"&sortBy=lastUpdatedDate&start=0&max_results=10")
 
@@ -214,7 +214,7 @@ class test_queryStringProduction(test_queryString):
         self.queryString.addCategory("cond-mat.soft")
         self.assertEqual(str(self.queryString),
                          r"http://export.arxiv.org/api/query?"
-                         r"search_query=%28ti:Awesome%29"
+                         r"search_query=%28%28ti:Awesome%29%29"
                          r"+AND+%28cat:cond-mat+OR+cat:cond-mat.soft%29"
                          r"&sortBy=lastUpdatedDate&start=0&max_results=10")
 
@@ -223,7 +223,8 @@ class test_queryStringProduction(test_queryString):
         self.queryString.addAuthorQuery("Mustermann_M")
         self.assertEqual(str(self.queryString),
                          r"http://export.arxiv.org/api/query?"
-                         r"search_query=%28au:Testfrau_T+OR+au:Mustermann_M%29"
+                         r"search_query=%28%28au:Testfrau_T+OR+"
+                         r"au:Mustermann_M%29%29"
                          r"&sortBy=lastUpdatedDate&start=0&max_results=10")
 
     def test_onlyAbstractsNoCategory(self):
@@ -231,7 +232,7 @@ class test_queryStringProduction(test_queryString):
         self.queryString.addAbstractQuery("Stuff")
         self.assertEqual(str(self.queryString),
                          r"http://export.arxiv.org/api/query?"
-                         r"search_query=%28abs:Awesome+OR+abs:Stuff%29"
+                         r"search_query=%28%28abs:Awesome+OR+abs:Stuff%29%29"
                          r"&sortBy=lastUpdatedDate&start=0&max_results=10")
 
     def test_onlyTitlesNoCategory(self):
@@ -239,7 +240,7 @@ class test_queryStringProduction(test_queryString):
         self.queryString.addTitleQuery("Stuff")
         self.assertEqual(str(self.queryString),
                          r"http://export.arxiv.org/api/query?"
-                         r"search_query=%28ti:Awesome+OR+ti:Stuff%29"
+                         r"search_query=%28%28ti:Awesome+OR+ti:Stuff%29%29"
                          r"&sortBy=lastUpdatedDate&start=0&max_results=10")
 
     def test_AuthorsTitlesAbstractsWithCategory(self):
@@ -253,21 +254,21 @@ class test_queryStringProduction(test_queryString):
         self.queryString.addCategory("cond-mat.soft")
         self.assertEqual(str(self.queryString),
                          r"http://export.arxiv.org/api/query?"
-                         r"search_query=%28au:Testfrau_T+OR+"
-                         r"au:Mustermann_M+OR+"
-                         r"ti:Awesome+OR+ti:Stuff+OR+"
-                         r"abs:Great+OR+abs:Science%29"
+                         r"search_query=%28%28au:Testfrau_T+OR+"
+                         r"au:Mustermann_M%29+OR+"
+                         r"%28ti:Awesome+OR+ti:Stuff+OR+"
+                         r"abs:Great+OR+abs:Science%29%29"
                          r"+AND+%28cat:cond-mat+OR+cat:cond-mat.soft%29"
                          r"&sortBy=lastUpdatedDate&start=0&max_results=10")
 
 
-class test_queryStringResultNumbers(unittest.TestCase):
+class test_queryStringConstructor(unittest.TestCase):
     def test_onlyAuthorChangeN(self):
         self.queryString = QueryString(N=100)
         self.queryString.addAuthorQuery("Testfrau_T")
         self.assertEqual(str(self.queryString),
                          r"http://export.arxiv.org/api/query?"
-                         r"search_query=%28au:Testfrau_T%29"
+                         r"search_query=%28%28au:Testfrau_T%29%29"
                          r"&sortBy=lastUpdatedDate&start=0&max_results=100")
 
     def test_onlyAuthorChangeStart(self):
@@ -275,7 +276,7 @@ class test_queryStringResultNumbers(unittest.TestCase):
         self.queryString.addAuthorQuery("Testfrau_T")
         self.assertEqual(str(self.queryString),
                          r"http://export.arxiv.org/api/query?"
-                         r"search_query=%28au:Testfrau_T%29"
+                         r"search_query=%28%28au:Testfrau_T%29%29"
                          r"&sortBy=lastUpdatedDate&start=100&max_results=10")
 
     def test_onlyAuthorChangeStartAndN(self):
@@ -283,7 +284,7 @@ class test_queryStringResultNumbers(unittest.TestCase):
         self.queryString.addAuthorQuery("Testfrau_T")
         self.assertEqual(str(self.queryString),
                          r"http://export.arxiv.org/api/query?"
-                         r"search_query=%28au:Testfrau_T%29"
+                         r"search_query=%28%28au:Testfrau_T%29%29"
                          r"&sortBy=lastUpdatedDate&start=100&max_results=5")
 
     def test_onlyAuthorUpdateN(self):
@@ -292,7 +293,7 @@ class test_queryStringResultNumbers(unittest.TestCase):
         self.queryString.nextNumberOfResults(15)
         self.assertEqual(str(self.queryString),
                          r"http://export.arxiv.org/api/query?"
-                         r"search_query=%28au:Testfrau_T%29"
+                         r"search_query=%28%28au:Testfrau_T%29%29"
                          r"&sortBy=lastUpdatedDate&start=10&max_results=15")
 
     def test_onlyAuthorChangeUpdateN(self):
@@ -301,8 +302,50 @@ class test_queryStringResultNumbers(unittest.TestCase):
         self.queryString.nextNumberOfResults(15)
         self.assertEqual(str(self.queryString),
                          r"http://export.arxiv.org/api/query?"
-                         r"search_query=%28au:Testfrau_T%29"
+                         r"search_query=%28%28au:Testfrau_T%29%29"
                          r"&sortBy=lastUpdatedDate&start=20&max_results=15")
+
+    def test_invalidConnectorConstructor(self):
+        with self.assertRaises(InvalidConnectorException):
+            QueryString(connector="asdf")
+
+    def test_invalidConnector(self):
+        with self.assertRaises(InvalidConnectorException):
+            QueryString().setConnector("asdf")
+
+    def test_authorTitleAndConstructor(self):
+        self.queryString = QueryString()
+        self.queryString.addAuthorQuery("Testfrau_T")
+        self.queryString.addTitleQuery("Awesome")
+        self.queryString.setConnector("and")
+        self.assertEqual(str(self.queryString),
+                         r"http://export.arxiv.org/api/query?"
+                         r"search_query=%28%28au:Testfrau_T%29+AND+"
+                         r"%28ti:Awesome%29%29&sortBy=lastUpdatedDate"
+                         r"&start=0&max_results=10")
+
+    def test_authorAbstractAndConstructor(self):
+        self.queryString = QueryString()
+        self.queryString.addAuthorQuery("Testfrau_T")
+        self.queryString.addAbstractQuery("Awesome")
+        self.queryString.setConnector("and")
+        self.assertEqual(str(self.queryString),
+                         r"http://export.arxiv.org/api/query?"
+                         r"search_query=%28%28au:Testfrau_T%29+AND+"
+                         r"%28abs:Awesome%29%29&sortBy=lastUpdatedDate"
+                         r"&start=0&max_results=10")
+
+    def test_authorTitleAbstractAndConstructor(self):
+        self.queryString = QueryString()
+        self.queryString.addAuthorQuery("Testfrau_T")
+        self.queryString.addTitleQuery("Awesome")
+        self.queryString.addAbstractQuery("Stuff")
+        self.queryString.setConnector("and")
+        self.assertEqual(str(self.queryString),
+                         r"http://export.arxiv.org/api/query?"
+                         r"search_query=%28%28au:Testfrau_T%29+AND+"
+                         r"%28ti:Awesome+OR+abs:Stuff%29%29"
+                         r"&sortBy=lastUpdatedDate&start=0&max_results=10")
 
 
 if __name__ == "__main__":

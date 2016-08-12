@@ -13,6 +13,11 @@ class NotInQueryException(Exception):
     """
 
 
+class InvalidConnectorException(Exception):
+    """Raise when trying to set connector not being and/or
+    """
+
+
 class QueryString:
     """Composer of a query string for searches using arXiv's api
     """
@@ -21,12 +26,11 @@ class QueryString:
     searchPrefix = r"search_query="
     blockStart = r"%28"
     blockEnd = r"%29"
-    andString = r"+AND+"
-    orString = r"+OR+"
+    connectorStrings = {"and": r"+AND+", "or": r"+OR+"}
     validCategories = ["cond-mat",
                        "cond-mat.soft"]
 
-    def __init__(self, N=10, start=0):
+    def __init__(self, N=10, start=0, connector="or"):
         """Constructor for a query string
 
         Parameters
@@ -35,6 +39,13 @@ class QueryString:
             Number of results to search for
         start: int
             Result number to start from
+        connector: str
+            Can be either 'and' or 'or' between author and title/abstract
+
+        Raises
+        ------
+        InvalidConnectorException
+            If connector is not and/or
         """
         self.start = start
         self.N = N
@@ -42,6 +53,9 @@ class QueryString:
         self.queries = {"ti":  [],
                         "abs": [],
                         "au":  []}
+        self.connector = connector.lower()
+        if not (self.connector in self.connectorStrings.keys()):
+            raise InvalidConnectorException
 
     def __checkForEmptyQuery(self):
         """Check if there are any queries
@@ -57,6 +71,31 @@ class QueryString:
                 empty = False
                 break
         return empty
+
+    def __produceBlock(self, qType, qList=None):
+        """Produce a block of queries for the given type (without parantheses)
+
+        Parameters
+        ----------
+        qType: str
+            Type to create the block for
+        qList: list
+            List of queries (if not given self.queries[qType] is used)
+
+        Returns
+        -------
+        block: str
+            Block for the given qType
+        """
+        block = ""
+        first = True
+        for query in (qList if not (qList is None) else self.queries[qType]):
+            if first:
+                block += qType+":"+query
+                first = False
+            else:
+                block += self.connectorStrings["or"]+qType+":"+query
+        return block
 
     def __str__(self):
         """Gives the current QueryString as string
@@ -76,27 +115,38 @@ class QueryString:
         """
         if self.__checkForEmptyQuery():
             raise EmptyQueryException
+
+        # What fields are needed?
+        authors = (len(self.queries["au"]) > 0)
+        titlesOrAbstracts = ((len(self.queries["ti"]) > 0)
+                             or (len(self.queries["abs"]) > 0))
+        titlesAndAbstracts = ((len(self.queries["ti"]) > 0)
+                              and (len(self.queries["abs"]) > 0))
+        categories = (len(self.categories) > 0)
+
         url = self.baseUrl+self.searchPrefix+self.blockStart
-        first = True  # First query does not need an +OR+
-        for queryType in ["au", "ti", "abs"]:
-            if len(self.queries[queryType]) > 0:
-                for query in self.queries[queryType]:
-                    if first:
-                        url += queryType+":"+query
-                        first = False
-                    else:
-                        url += "+OR+"+queryType+":"+query
-        if len(self.categories) > 0:
-            url += self.blockEnd+"+AND+"+self.blockStart
-            first = True  # First query does not need an +OR+
-            for category in self.categories:
-                if first:
-                    url += "cat:"+category
-                    first = False
-                else:
-                    url += "+OR+cat:"+category
-        url += (self.blockEnd
-                + r"&sortBy=lastUpdatedDate&start={0:d}&max_results={1:d}"
+        # Start with authors
+        if authors:
+            url += self.blockStart + self.__produceBlock("au") + self.blockEnd
+            if titlesOrAbstracts:
+                url += self.connectorStrings[self.connector]
+
+        # Now do title/abstract queries
+        if titlesOrAbstracts:
+            url += self.blockStart
+        url += self.__produceBlock("ti")
+        if titlesAndAbstracts:
+            url += self.connectorStrings["or"]
+        url += self.__produceBlock("abs") + self.blockEnd
+        if titlesOrAbstracts:
+            url += self.blockEnd
+
+        # Lastly, do the categories
+        if categories:
+            url += (self.connectorStrings["and"]+self.blockStart
+                    + self.__produceBlock("cat", self.categories)
+                    + self.blockEnd)
+        url += (r"&sortBy=lastUpdatedDate&start={0:d}&max_results={1:d}"
                 .format(self.start, self.N))
         return url
 
@@ -157,6 +207,23 @@ class QueryString:
             List of all categories that are searched in
         """
         return self.categories
+
+    def setConnector(self, connector):
+        """Set to do or/and searches
+
+        Parameters
+        ----------
+        connector: str
+            Can be either 'and' or 'or'
+
+        Raises
+        ------
+        InvalidConnectorException
+            If connector is not and/or
+        """
+        self.connector = connector.lower()
+        if not (self.connector in self.connectorStrings.keys()):
+            raise InvalidConnectorException
 
     def nextNumberOfResults(self, N=10):
         """Changes the query string to search for the next N results

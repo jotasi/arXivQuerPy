@@ -39,8 +39,10 @@ relatively straightforward to include additional feeds.
 ## Automation
 
 To get a daily update, you can add the script to your crontab. E.g. to run the
-script Monday to Friday at 7am:
+script Monday to Friday at 7am add two lines to your crontab:
 
-    crontab -e  # Now add the following line and then save
-    0 7 * * 1,2,3,4,5   python /path/to/arXivQuerPy.py -e email@uni-mainz.de\
+    crontab -e  # Now add the following lines and then save
+    0 7 * * 2,3,4,5   python /path/to/arXivQuerPy.py -e email@uni-mainz.de\
             -a /path/to/Authors.txt -t /path/to/titles -C category -s
+    0 7 * * 1   python /path/to/arXivQuerPy.py -e email@uni-mainz.de\
+            -a /path/to/Authors.txt -t /path/to/titles -C category -sl 3

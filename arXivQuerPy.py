@@ -1,6 +1,8 @@
 import argparse
 import datetime
 import collections
+import os
+import sys
 
 import queryString as qS
 import feedDownloader as fD
@@ -51,7 +53,7 @@ class arXivQuerPy():
         """Add title keywords to search for
         """
         if (type(titles) == str):
-            self.query.addCategory(categories)
+            self.query.addTitleQuery(titles)
         else:
             for title in titles:
                 self.query.addTitleQuery(title)
@@ -98,6 +100,8 @@ class arXivQuerPy():
         if ((not suppress) or (text.count('\n') > 2)):
             mS.sendMail(text, address)
 
+
+
 if (__name__ == "__main__"):
     parser = argparse.ArgumentParser()
     parser.add_argument("-e", "--email", type=str, required=True,
@@ -120,6 +124,7 @@ if (__name__ == "__main__"):
                         help="Go back this many days")
     args = parser.parse_args()
 
+
     if args.lastNDays is None:
         querPy = arXivQuerPy()
     else:
@@ -128,7 +133,7 @@ if (__name__ == "__main__"):
 
     if not (args.categories is None):
         with open(args.categories) as f:
-            querPy.addCategories(f.read().split())
+            querPy.addCategory(f.read().split())
     if not (args.category is None):
         querPy.addCategory(args.category)
     if not (args.author is None):

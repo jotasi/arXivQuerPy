@@ -94,11 +94,15 @@ class arXivQuerPy():
             self.feedDL.updateFeed()
 
     def sendMail(self, address, suppress):
-        """Sends the gathered feed as text to the given address
+        """Sends the gathered feed as text to the given address.
+        Returns boolean whether mail was send.
         """
         text = self.textComp.getText()
         if ((not suppress) or (text.count('\n') > 2)):
             mS.sendMail(text, address)
+            return True
+        else:
+            return False
 
 
 if (__name__ == "__main__"):
@@ -126,8 +130,8 @@ if (__name__ == "__main__"):
     if args.lastNDays is None:
         querPy = arXivQuerPy()
     else:
-        querPy = arXivQuerPy(date=datetime.date.today()
-                             - datetime.timedelta(days=args.lastNDays))
+        querPy = arXivQuerPy(date=datetime.date.today() -
+                             datetime.timedelta(days=args.lastNDays))
 
     if not (args.categories is None):
         with open(args.categories) as f:

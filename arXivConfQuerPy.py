@@ -83,7 +83,7 @@ class config():
 # email the results should be send to
 email     = {email}
 
-# category in which should be searched (comma separated list)
+# category in which should be searched (space separated list)
 category  = {category}
 
 # keywords in the title (space separated list)

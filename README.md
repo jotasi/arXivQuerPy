@@ -43,7 +43,31 @@ relatively straightforward to include additional feeds.
 You can use the arXiv updater with a configuration file as well. 
 For that execute the file `arXivConfQuerPy.py`. It will guide you through the
 first generation of a condifuration file. Feel free to change the file to a 
-later stage if you want. By default the filename will be `.arXivQuerPyconfig`. 
+later stage if you want. By default the filename will be `.arXivQuerPyconfig`.
+
+### Example configuration file
+```bash
+# email the results should be send to
+email     = your.email@uni-mainz.de
+
+# category in which should be searched (space separated list)
+category  = cond-mat 
+
+# keywords in the title (space separated list)
+title     = 
+
+# authors that should be searched (space separated list)
+authors   = 
+
+# keywords in abstract that should be searched (space separated list)
+abstract  = active
+
+# whether to suppress empty emails or not (True/False) 
+suppress  = True
+
+# the amount of days the you want your results to go back
+lastNDays = 1 
+```
 
 ## Automation
 

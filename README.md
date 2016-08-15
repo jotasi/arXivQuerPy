@@ -58,5 +58,6 @@ script Monday to Friday at 7am add two lines to your crontab:
 
 If you choose to use the configuration file method, first generate the config 
 file and then run:
+
     crontab -e
     0 7 * * 1 python /path/to/arXivConfQuerPy.py

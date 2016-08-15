@@ -38,6 +38,13 @@ The underlying classes also have further functionalities that are not parsed of
 the script, yet. Feel free to implement further options. Also it should be
 relatively straightforward to include additional feeds.
 
+## Configuration file
+
+You can use the arXiv updater with a configuration file as well. 
+For that execute the file `arXivConfQuerPy.py`. It will guide you through the
+first generation of a condifuration file. Feel free to change the file to a 
+later stage if you want. By default the filename will be `.arXivQuerPyconfig`. 
+
 ## Automation
 
 To get a daily update, you can add the script to your crontab. E.g. to run the
@@ -48,3 +55,8 @@ script Monday to Friday at 7am add two lines to your crontab:
             -a /path/to/Authors.txt -t /path/to/titles -C category -s
     0 7 * * 1   python /path/to/arXivQuerPy.py -e email@uni-mainz.de\
             -a /path/to/Authors.txt -t /path/to/titles -C category -sl 3
+
+If you choose to use the configuration file method, first generate the config 
+file and then run:
+    crontab -e
+    0 7 * * 1 python /path/to/arXivConfQuerPy.py

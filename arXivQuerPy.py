@@ -15,7 +15,7 @@ class arXivQuerPy():
     """
     def __init__(self,
                  greeting=None,
-                 date=datetime.date.today()-datetime.timedelta(days=1)):
+                 date=datetime.date.today() - datetime.timedelta(days=1)):
         """Constructor for the glue class
 
         Parameters
@@ -101,7 +101,6 @@ class arXivQuerPy():
             mS.sendMail(text, address)
 
 
-
 if (__name__ == "__main__"):
     parser = argparse.ArgumentParser()
     parser.add_argument("-e", "--email", type=str, required=True,
@@ -123,7 +122,6 @@ if (__name__ == "__main__"):
     parser.add_argument("-l", "--lastNDays", type=int, default=None,
                         help="Go back this many days")
     args = parser.parse_args()
-
 
     if args.lastNDays is None:
         querPy = arXivQuerPy()

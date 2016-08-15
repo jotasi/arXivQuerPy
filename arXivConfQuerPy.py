@@ -1,4 +1,4 @@
-import datetime 
+import datetime
 import os
 import sys
 
@@ -13,11 +13,12 @@ class FileExistsAlready(Exception):
     """The file exist already"""
     pass
 
+
 class config():
-    def __init__(self, filename = ".arXivQuerPyconfig"):
+    def __init__(self, filename=".arXivQuerPyconfig"):
         self.args = {}
         self.filename = filename
-    
+
     def get_args(self):
         return self.args
 
@@ -28,15 +29,17 @@ class config():
         self.args = {}
         with open(self.filename) as config:
             content = config.read()
-        
+
         # remove empty lines from content
         content = os.linesep.join([s for s in content.splitlines() if s])
         # remove lines starting with #
-        content = os.linesep.join([s for s in content.splitlines() if not s.startswith('#')])
+        content = os.linesep.join([s for s in content.splitlines()
+                                   if not s.startswith('#')])
 
         print content
 
-        key_args = ["email", "category", "title", "author", "abstract", "suppress", "lastNDays"]
+        key_args = ["email", "category", "title", "author", "abstract",
+                    "suppress", "lastNDays"]
         for key in key_args:
             self.args[key] = None
             for line in content.split('\n'):
@@ -46,10 +49,11 @@ class config():
                         self.args[key] = None
                     else:
                         self.args[key] = split[1].strip()
-    
+
     def generate_config(self):
         if self.config_available():
-            raise FileExistsAlready("File {0} already exists.".format(self.filename))
+            raise FileExistsAlready("File {0} already exists."
+                                    .format(self.filename))
         else:
             content = """\
 # email the results should be send to
@@ -67,30 +71,34 @@ authors  = {author}
 # keywords in abstract that should be searched (space separated list)
 abstract  = {abstract}
 
-# whether to suppress empty emails or not (True/False) 
+# whether to suppress empty emails or not (True/False)
 suppress  = {suppress}
 
 # the amount of days the you want your results to go back
 lastNDays = {lastNDays}
 """
-            email    = raw_input("What is your email address? (Has to be from uni-mainz.de) ")
-            category = raw_input("Which categories should be searched?  (cond-mat, cond-mat:soft) ")
-            title    = raw_input("Which keywords should be in the title? ")
-            author   = raw_input("Who are the authors? ")
-            abstract = raw_input("Which keywords should be in the abstract? ")
-            suppress = raw_input("Should empty email be suppressed? (True/False) ")
-            lastNDays= raw_input("How many days from today should we search back? ")
+            email     = raw_input("What is your email address? "
+                                  "(Has to be from uni-mainz.de) ")
+            category  = raw_input("Which categories should be searched? "
+                                  "(cond-mat, cond-mat:soft) ")
+            title     = raw_input("Which keywords should be in the title? ")
+            author    = raw_input("Who are the authors? ")
+            abstract  = raw_input("Which keywords should be in the abstract? ")
+            suppress  = raw_input("Should empty email be suppressed? "
+                                  "(True/False) ")
+            lastNDays = raw_input("How many days from today should we search "
+                                  "back? ")
 
             with open(self.filename, 'w') as conf:
                 conf.write(content.format(email=email, category=category,
-                                          title=title, author=author, abstract=abstract,
-                                          suppress=suppress, lastNDays=lastNDays))
+                                          title=title, author=author,
+                                          abstract=abstract, suppress=suppress,
+                                          lastNDays=lastNDays))
 
 
 class DictToAttributes:
-    def __init__(self, **entries): 
+    def __init__(self, **entries):
         self.__dict__.update(entries)
-
 
 
 if (__name__ == "__main__"):
@@ -108,7 +116,7 @@ if (__name__ == "__main__"):
         print args
 
     args = DictToAttributes(**args)
-    
+
     if args.lastNDays is None:
         querPy = arXivQuerPy()
     else:
@@ -128,7 +136,6 @@ if (__name__ == "__main__"):
 
     args.suppress = False
 
-    
     try:
         querPy.search()
     except qS.EmptyQueryException:

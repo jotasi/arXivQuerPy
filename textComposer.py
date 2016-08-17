@@ -107,6 +107,8 @@ class TextComposer():
         if not (self.text == ""):
             self.text += u"\n"
         numEntries = len(feed.entries)
+        if (numEntries < 10):
+            reached = True
         for i, entry in enumerate(feed.entries):
             entryUpdateParsed = entry.updated_parsed
             if ((not (self.date is None))
@@ -115,14 +117,14 @@ class TextComposer():
                 break
             if i > 0:
                 self.text += u"\n"
-            self.text += entry.title+u"\n"
+            self.text += entry.title + u"\n"
             numAuthors = len(entry.authors)
             for j, author in enumerate(entry.authors):
                 self.text += author["name"]
-                if j < numAuthors-1:
+                if j < numAuthors - 1:
                     self.text += u", "
                 else:
                     self.text += u"\n"
-            self.text += entry.link+u"\n"
-            self.text += entry.summary+u"\n"
+            self.text += entry.link + u"\n"
+            self.text += entry.summary + u"\n"
         return reached

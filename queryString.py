@@ -91,10 +91,10 @@ class QueryString:
         first = True
         for query in (qList if not (qList is None) else self.queries[qType]):
             if first:
-                block += qType+":"+query
+                block += qType + ":" + query
                 first = False
             else:
-                block += self.connectorStrings["or"]+qType+":"+query
+                block += self.connectorStrings["or"] + qType + ":" + query
         return block
 
     def __str__(self):
@@ -124,7 +124,7 @@ class QueryString:
                               and (len(self.queries["abs"]) > 0))
         categories = (len(self.categories) > 0)
 
-        url = self.baseUrl+self.searchPrefix+self.blockStart
+        url = self.baseUrl + self.searchPrefix + self.blockStart
         # Start with authors
         if authors:
             url += self.blockStart + self.__produceBlock("au") + self.blockEnd
@@ -143,7 +143,7 @@ class QueryString:
 
         # Lastly, do the categories
         if categories:
-            url += (self.connectorStrings["and"]+self.blockStart
+            url += (self.connectorStrings["and"] + self.blockStart
                     + self.__produceBlock("cat", self.categories)
                     + self.blockEnd)
         url += (r"&sortBy=lastUpdatedDate&start={0:d}&max_results={1:d}"

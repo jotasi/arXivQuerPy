@@ -35,6 +35,14 @@ class test_textComposer(unittest.TestCase):
         self.textComposer.updateDate(date)
         self.assertEqual(self.textComposer.getDate(), date)
 
+    def test_dateReachedEmpty(self):
+        date = datetime.date(2016, 8, 11)
+        self.textComposer.updateDate(date)
+        feedDL = FeedDownloader(r"notNecessary")
+        feedDL.loadFeed("./Tests/testFeedEmpty.pickle")
+        feed = feedDL.getFeed()
+        self.assertTrue(self.textComposer.addFeed(feed))
+
     def test_dateReached(self):
         date = datetime.date(2016, 8, 11)
         self.textComposer.updateDate(date)

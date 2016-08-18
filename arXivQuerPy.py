@@ -104,6 +104,11 @@ class arXivQuerPy():
         else:
             return False
 
+    def printText(self):
+        """Prints the gathered feed rather than sending it via email
+        """
+        print self.textComp.getText()
+
 
 if (__name__ == "__main__"):
     parser = argparse.ArgumentParser()
@@ -168,4 +173,7 @@ if (__name__ == "__main__"):
     except qS.EmptyQueryException:
         exit(1)
 
-    querPy.sendMail(args.email, args.suppress)
+    if args.email == "print":
+        querPy.printText()
+    else:
+        querPy.sendMail(args.email, args.suppress)

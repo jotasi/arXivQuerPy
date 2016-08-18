@@ -28,7 +28,13 @@ class QueryString:
     blockEnd = r"%29"
     connectorStrings = {"and": r"+AND+", "or": r"+OR+"}
     validCategories = ["cond-mat",
-                       "cond-mat.soft"]
+                       "cond-mat.soft",
+                       "cond-mat.stat-mech",
+                       "cond-mat.dis-nn",
+                       "cond-mat.other",
+                       "cond-mat.mtrl-sci",
+                       "physics.bio-ph",
+                       "physics.comp-ph"]
 
     def __init__(self, N=10, start=0, connector="or"):
         """Constructor for a query string

@@ -125,6 +125,9 @@ if (__name__ == "__main__"):
                         help="Don't send me empty EMails!")
     parser.add_argument("-l", "--lastNDays", type=int, default=None,
                         help="Go back this many days")
+    parser.add_argument("--andNotOr", action="store_true",
+                        help="Search for one of the titles from one of "
+                        "the authors")
     args = parser.parse_args()
 
     if args.lastNDays is None:
@@ -149,7 +152,7 @@ if (__name__ == "__main__"):
             querPy.addAbstractKeywords(f.read().split())
 
     try:
-        querPy.search()
+        querPy.search(args.andNotOr)
     except qS.EmptyQueryException:
         exit(1)
 

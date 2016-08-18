@@ -115,19 +115,25 @@ if (__name__ == "__main__"):
                         help="Category to search in")
     parser.add_argument("-a", "--author", type=str, default=None,
                         help="File containing the author ids to search for")
+    parser.add_argument("-A", "--authorList", nargs='+', default=None,
+                        help="List of author ids to search for")
     parser.add_argument("-t", "--title", type=str, default=None,
-                        help="File containing the keywords to search for in"
+                        help="File containing the keywords to search for in "
                              "titles")
+    parser.add_argument("-T", "--titleList", nargs='+', default=None,
+                        help="List of keywords to search for in titles")
     parser.add_argument("-b", "--abstract", type=str, default=None,
                         help="File containing the keywords to search for in "
                              "abstracts")
+    parser.add_argument("-B", "--abstractList", nargs='+', default=None,
+                        help="List of keywords to search for in abstracts")
     parser.add_argument("-s", "--suppress", action="store_true",
                         help="Don't send me empty EMails!")
     parser.add_argument("-l", "--lastNDays", type=int, default=None,
                         help="Go back this many days")
     parser.add_argument("--andNotOr", action="store_true",
                         help="Search for one of the titles from one of "
-                        "the authors")
+                             "the authors")
     args = parser.parse_args()
 
     if args.lastNDays is None:
@@ -144,12 +150,18 @@ if (__name__ == "__main__"):
     if not (args.author is None):
         with open(args.author) as f:
             querPy.addAuthors(f.read().split())
+    if not (args.authorList is None):
+        querPy.addAuthors(args.authorList)
     if not (args.title is None):
         with open(args.title) as f:
             querPy.addTitleKeywords(f.read().split())
+    if not (args.titleList is None):
+        querPy.addTitleKeywords(args.titleList)
     if not (args.abstract is None):
         with open(args.abstract) as f:
             querPy.addAbstractKeywords(f.read().split())
+    if not (args.abstractList is None):
+        querPy.addAbstractKeywords(args.abstractList)
 
     try:
         querPy.search(args.andNotOr)

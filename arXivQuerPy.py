@@ -104,16 +104,22 @@ class arXivQuerPy():
         else:
             return False
 
-    def printText(self):
+    def printText(self, suppress):
         """Prints the gathered feed rather than sending it via email
         """
-        print self.textComp.getText()
+        text = self.textComp.getText()
+        if ((not suppress) or (text.count('\n') > 2)):
+            print(text)
+        else:
+            print("No results found in the given timeframe...")
 
 
 if (__name__ == "__main__"):
     parser = argparse.ArgumentParser()
     parser.add_argument("-e", "--email", type=str, required=True,
-                        help="Update will be send to this email address")
+                        help="Update will be send to this email address.\n"
+                             "'print' will print to stdout instead of sending "
+                             "an email.")
     parser.add_argument("-c", "--categories", type=str, default=None,
                         help="File containing the categories to search in")
     parser.add_argument("-C", "--category", type=str, default=None,
@@ -174,6 +180,6 @@ if (__name__ == "__main__"):
         exit(1)
 
     if args.email == "print":
-        querPy.printText()
+        querPy.printText(args.suppress)
     else:
         querPy.sendMail(args.email, args.suppress)

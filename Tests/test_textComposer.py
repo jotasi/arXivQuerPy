@@ -102,7 +102,9 @@ class test_textComposer(unittest.TestCase):
                         u"imaging: From the\n  second-level $t$-test to "
                         u"prevalence inference\n"
                         u"Carsten Allefeld, Kai G\xf6rgen, John-Dylan Haynes"
-                        u"\n").encode("utf-8")
+                        u"\n")
+        if not isinstance(expectedText, str):
+            expectedText = expectedText.encode("utf-8")
         feedDL = FeedDownloader(r"notNecessary")
         feedDL.loadFeed("./Tests/testFeed.pickle")
         feed = feedDL.getFeed()
@@ -166,7 +168,9 @@ class test_textComposerGreeting(unittest.TestCase):
                           u"imaging: From the\n  second-level $t$-test to "
                           u"prevalence inference\n"
                           u"Carsten Allefeld, Kai G\xf6rgen, "
-                          u"John-Dylan Haynes\n").encode("utf-8")
+                          u"John-Dylan Haynes\n")
+        if not isinstance(expectedText, str):
+            expectedText = expectedText.encode("utf-8")
         feedDL = FeedDownloader(r"notNecessary")
         feedDL.loadFeed("./Tests/testFeed.pickle")
         feed = feedDL.getFeed()

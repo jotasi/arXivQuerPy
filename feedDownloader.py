@@ -1,4 +1,8 @@
-import urllib
+import sys
+try:
+    from urllib.request import urlopen
+except:
+    from urllib import urlopen
 import feedparser
 import pickle
 import os
@@ -51,7 +55,11 @@ class FeedDownloader():
     def updateFeed(self):
         """Downloads the current feed
         """
-        self.feed = feedparser.parse(urllib.urlopen(self.queryString).read())
+        try:
+            with urlopen(self.queryString) as url:
+                self.feed = feedparser.parse(url.read())
+        except AttributeError:
+            self.feed = feedparser.parse(urlopen(self.queryString).read())
 
     def getFeed(self):
         """Returns the current feed
@@ -70,7 +78,8 @@ class FeedDownloader():
         """
         if self.feed is None:
             raise NoDownloadedFeedException
-        pickle.dump(self.feed, open(fileName, "wb"))
+        with open(fileName, "wb") as f:
+            pickle.dump(self.feed, f)
 
     def loadFeed(self, fileName=r"./feed.pickle"):
         """Loads the feed for further use
@@ -82,4 +91,5 @@ class FeedDownloader():
         """
         if not os.path.exists(fileName):
             raise NoSavedFeedException
-        self.feed = pickle.load(open(fileName, "rb"))
+        with open(fileName, "rb") as f:
+            self.feed = pickle.load(f)

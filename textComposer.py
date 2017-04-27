@@ -43,8 +43,14 @@ class TextComposer():
             raise NotADateException
         self.date = date
 
+    def __unicode__(self):
+        return self.text
+
     def __str__(self):
-        return self.text.encode("utf-8")
+        try:
+            return unicode(self).encode("utf-8")
+        except NameError:
+            return self.text
 
     def getText(self):
         """Gives the current version of the text

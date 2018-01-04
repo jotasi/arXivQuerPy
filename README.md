@@ -1,4 +1,7 @@
 # arXivQuerPy
+
+[![Travis CI tests](https://travis-ci.org/jotasi/arXivQuerPy.svg?branch=master)](https://travis-ci.org/jotasi/arXivQuerPy)
+
 (Very creative/funny, I know...)
 
 E-Mail for comments and/or suggestions to siebertjonathan(at)aim.com
@@ -11,7 +14,7 @@ updates during the last days matching to queries that you defined.
 Simply clone this git:
 
     cd some/folder/
-    git clone git@gitlab.physik.uni-mainz.de:josieber/arXivQuerPy.git
+    git clone git@github.com:jotasi/arXivQuerPy.git
 
 You can check, that it works by running the unittests:
 
@@ -26,6 +29,12 @@ You might need additional packages to run the code. Those can be installed by
 The python file to run is `arXivQuerPy.py`. You can get all options by use of
 the `-h` flag. Also you could write you own script calling the functions of
 arXivQuerPy to suite your needs.
+
+## E-mail sending
+
+At the moment sending of e-mails only works within the network of the
+university Mainz. In the call to `sendMail` you can specify an own mailgate to
+send e-mails through, though.
 
 ## Functionality
 
